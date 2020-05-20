@@ -1,0 +1,77 @@
+{
+	"type" : "project",
+	"description": "Shopping Cart API",
+	"prefer-stable": true,
+	"require" : {
+		"php": "^7.3",
+		"ext-ctype": "*",
+		"ext-iconv": "*",
+		"appto/php-value-objects": "0.4.*",
+		"symfony/console": "4.4.*",
+		"symfony/dotenv": "4.4.*",
+		"symfony/flex": "^1.3.1",
+		"symfony/framework-bundle": "4.4.*",
+		"symfony/messenger": "4.4.*",
+		"symfony/monolog-bundle": "^3.4",
+		"symfony/orm-pack": "^1.0",
+		"symfony/validator": "4.4.*",
+		"symfony/yaml": "4.4.*"
+	},
+	"require-dev" : {
+		"fzaninotto/faker": "^1.8",
+		"phpstan/phpstan": "^0.11.15",
+		"phpunit/phpunit": "^8.3",
+		"zircote/swagger-php": "^3.0"
+	},
+	"scripts": {
+		"post-install-cmd": [
+			"./etc/hooks/install-hooks.sh"
+		],
+		"phpunit": "vendor/bin/phpunit --exclude-group='disabled'",
+	    "phpstan": "vendor/bin/phpstan analyse -l 5 -c etc/phpstan/phpstan.neon src --quiet",
+	    "test": ["@phpstan", "@phpunit"]
+	  },
+	"config" : {
+		"preferred-install" : {
+			"*" : "dist"
+		},
+		"sort-packages" : true,
+		"platform" : {
+			"php" : "7.3"
+		}
+	},
+	"autoload" : {
+		"psr-4" : {
+			"Appto\\" : "src/Appto/"
+		}
+	},
+	"autoload-dev" : {
+		"psr-4" : {
+			"Test\\Unit\\": "tests/Unit/"
+		}
+	},
+	"replace" : {
+		"paragonie/random_compat" : "2.*",
+		"symfony/polyfill-ctype" : "*",
+		"symfony/polyfill-iconv" : "*",
+		"symfony/polyfill-php71" : "*",
+		"symfony/polyfill-php70" : "*",
+		"symfony/polyfill-php56" : "*"
+	},
+	"conflict" : {
+		"symfony/symfony" : "*"
+	},
+	"extra" : {
+		"symfony" : {
+			"allow-contrib" : false,
+			"require" : "4.4.*"
+		}
+	},
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Alfredo Melendres",
+			"email": "alfredo.melendres@gmail.com"
+		}
+	]
+}
