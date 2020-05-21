@@ -25,7 +25,7 @@ class CartTest extends UnitTest
         $cart = CartMother::random();
         $product = ProductLineMother::random();
         $cart->addProductLine(
-            $product->productLineId(),
+            $product->name(),
             $product->productPrice(),
             $product->quantity()
         );
@@ -37,32 +37,29 @@ class CartTest extends UnitTest
         $cart = CartMother::random();
         $product = ProductLineMother::random();
         $cart->addProductLine(
-            $product->productLineId(),
+            $product->name(),
             $product->productPrice(),
             $product->quantity()
         );
         self::assertEquals(1, $cart->productLines()->count());
     }
 
-
     public function testAddProductLineThatAlreadyExists() : void
     {
         $cart = CartMother::random();
         $productLine = ProductLineMother::random();
         $cart->addProductLine(
-            $productLine->productLineId(),
+            $productLine->name(),
             $productLine->productPrice(),
             $productLine->quantity()
         );
         $cart->addProductLine(
-            $productLine->productLineId(),
+            $productLine->name(),
             $productLine->productPrice(),
             $productLine->quantity()
         );
         self::assertEquals(1, $cart->productLines()->count());
         self::assertEquals($productLine->quantity()->multiply(2), $cart->total()->numberOfProducts());
     }
-
-
 
 }

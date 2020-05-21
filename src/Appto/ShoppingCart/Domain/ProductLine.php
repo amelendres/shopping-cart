@@ -6,18 +6,18 @@ use Appto\Common\Domain\Money\Money;
 
 class ProductLine
 {
-    private $productLineId;
+    private $name;
     private $productPrice;
     private $quantity;
 
     private $totalPrice;
 
     public function __construct(
-        ProductLineId $productLineId,
+        ProductName $name,
         ProductPrice $productPrice,
         Quantity $quantity
     ) {
-        $this->productLineId = $productLineId;
+        $this->name = $name;
         $this->productPrice = $productPrice;
         $this->quantity = $quantity;
 
@@ -32,7 +32,7 @@ class ProductLine
     public function add(ProductLine $other): ProductLine
     {
         return new self(
-            $this->productLineId,
+            $this->name,
             new ProductPrice(
                 $this->productPrice->productId(),
                 $this->productPrice->sellerId(),
@@ -42,9 +42,9 @@ class ProductLine
         );
     }
 
-    public function productLineId() : ProductLineId
+    public function name() : ProductName
     {
-        return $this->productLineId;
+        return $this->name;
     }
 
     public function productPrice() : ProductPrice

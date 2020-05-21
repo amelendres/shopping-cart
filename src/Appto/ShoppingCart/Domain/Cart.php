@@ -29,18 +29,18 @@ class Cart
     }
 
     public function addProductLine(
-        ProductLineId $productLineId,
+        ProductName $name,
         ProductPrice $productPrice,
         Quantity $quantity
     ) : void {
 
         $newProductLine = new ProductLine(
-            $productLineId,
+            $name,
             $productPrice,
             $quantity,
         );
 
-        /** @var ProductLine $productLine */
+        /** @var null|ProductLine $productLine */
         $productLine = $this->findProductLine($newProductLine);
         if ($productLine) {
             $productLine = $productLine->add($newProductLine);
