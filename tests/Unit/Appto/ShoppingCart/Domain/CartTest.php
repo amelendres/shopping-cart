@@ -44,25 +44,25 @@ class CartTest extends UnitTest
         self::assertEquals(1, $cart->productLines()->count());
     }
 
-    public function testRemoveProductLineFromCart() : void
+
+    public function testAddProductLineThatAlreadyExists() : void
     {
         $cart = CartMother::random();
-        $product = ProductLineMother::random();
-        $other = ProductLineMother::random();
+        $productLine = ProductLineMother::random();
         $cart->addProductLine(
-            $product->productLineId(),
-            $product->productPrice(),
-            $product->quantity()
+            $productLine->productLineId(),
+            $productLine->productPrice(),
+            $productLine->quantity()
         );
         $cart->addProductLine(
-            $other->productLineId(),
-            $other->productPrice(),
-            $other->quantity()
+            $productLine->productLineId(),
+            $productLine->productPrice(),
+            $productLine->quantity()
         );
-
-        $cart->removeProduct($product->productLineId(), $product->productPrice()->sellerId());
         self::assertEquals(1, $cart->productLines()->count());
-        self::assertEquals($other->productLineId(), $cart->productLines()->first()->productLineId());
+        self::assertEquals($productLine->quantity()->multiply(2), $cart->total()->numberOfProducts());
     }
+
+
 
 }
