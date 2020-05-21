@@ -62,4 +62,24 @@ class CartTest extends UnitTest
         self::assertEquals($productLine->quantity()->multiply(2), $cart->total()->numberOfProducts());
     }
 
+    public function testAddProductLineWithSameProductIdAndDifferentSellerId() : void
+    {
+        $cart = CartMother::random();
+        $productLine = ProductLineMother::random();
+        $other = ProductLineMother::randomWithDifferentSeller($productLine);
+        $cart->addProductLine(
+            $productLine->name(),
+            $productLine->productPrice(),
+            $productLine->quantity()
+        );
+        $cart->addProductLine(
+            $other->name(),
+            $other->productPrice(),
+            $other->quantity()
+        );
+
+        self::assertEquals(2, $cart->productLines()->count());
+        self::assertEquals($productLine->quantity()->add($other->quantity()), $cart->total()->numberOfProducts());
+    }
+
 }
