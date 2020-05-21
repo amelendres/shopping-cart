@@ -20,7 +20,6 @@ class Cart
         $this->id = $id;
         $this->buyerId = $buyerId;
         $this->productLines = new ArrayCollection();
-//        $this->total = null;
 
         $this->total = new CartTotal(
             new Money(0, new Currency(Money::DEFAULT_CURRENCY)),
@@ -41,25 +40,18 @@ class Cart
         );
 
         /** @var null|ProductLine $productLine */
-        $productLine = $this->findProductLine($newProductLine);
-        if ($productLine) {
-            $productLine = $productLine->add($newProductLine);
-        } else {
+        $productLine = $this->findProductLineByProduct($productPrice->productId());
+        if (is_null($productLine)) {
             $this->productLines()->add($newProductLine);
+        } elseif ($productLine->productPrice()->equals($productPrice)) {
+            $productLine = $productLine->add($newProductLine);
+        } elseif (!$productLine->productPrice()->sellerId()->equals($productPrice->sellerId())) {
+            throw new ProductDoesNotHaveTheSameSellerException($productPrice->productId());
+        } elseif (!$productLine->productPrice()->price()->equals($productPrice->price())) {
+            throw new ProductDoesNotHaveTheSamePriceException($productPrice->productId());
         }
 
         $this->incrementTotal($newProductLine);
-    }
-
-    private function findProductline(ProductLine $other) : ?ProductLine
-    {
-        foreach ($this->productLines() as $productLine) {
-            if ($productLine->productPrice()->equals($other->productPrice())) {
-                return $productLine;
-            }
-        }
-
-        return null;
     }
 
     private function incrementTotal(ProductLine $newProductLine) : void
@@ -68,6 +60,59 @@ class Cart
             $this->total->price()->add($newProductLine->totalPrice()),
             $this->total->numberOfProducts()->add($newProductLine->quantity())
         );
+    }
+
+    private function decrementTotal(ProductLine $productLine) : void
+    {
+        $this->total = new CartTotal(
+            $this->total->price()->minus($productLine->totalPrice()),
+            $this->total->numberOfProducts()->minus($productLine->quantity())
+        );
+    }
+
+    public function removeProductLine(ProductId $productId) : void
+    {
+        $productLine = $this->findProductLineByProduct($productId);
+        if ($productLine) {
+            $this->productLines()->removeElement($productLine);
+            $this->decrementTotal($productLine);
+        }
+    }
+
+    public function removeProductLinesFromSeller(SellerId $sellerId) : void
+    {
+        $productLinesToRemove = $this->findProductLinesBySeller($sellerId);
+        foreach ($productLinesToRemove as $productLine) {
+            $this->productLines()->removeElement($productLine);
+            $this->decrementTotal($productLine);
+        }
+    }
+
+    private function findProductLineByProduct(ProductId $productId) : ?ProductLine
+    {
+        foreach ($this->productLines() as $productLine) {
+            if ($productLine->productPrice()->productId()->equals($productId)) {
+                return $productLine;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param SellerId $sellerId
+     * @return array|ProductLine[]
+     */
+    private function findProductLinesBySeller(SellerId $sellerId) : array
+    {
+        $productLines = [];
+        foreach ($this->productLines() as $line) {
+            if ($line->productPrice()->sellerId()->equals($sellerId)) {
+                $productLines[] = $line;
+            }
+        }
+
+        return $productLines;
     }
 
     public function id() : CartId

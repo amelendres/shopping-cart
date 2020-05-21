@@ -22,4 +22,9 @@ class Quantity extends IntegerValueObject
     {
         return new self($this->value + $other->value());
     }
+
+    public function minus(Quantity $other): Quantity
+    {
+        return new self($this->value - $other->value());
+    }
 }
