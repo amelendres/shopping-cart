@@ -36,34 +36,35 @@ class Cart
         $productLine = $this->findProductLineByProduct($productPrice->productId());
         if (is_null($productLine)) {
             $this->productLines()->set((string)$newProductLine->productPrice()->productId(), $newProductLine);
+
         } elseif ($productLine->productPrice()->equals($productPrice)) {
-            $this->increaseProductUnits($productLine, $units );
+            $this->increaseProductUnits($productLine, $units);
+
         } elseif (!$productLine->productPrice()->sellerId()->equals($productPrice->sellerId())) {
             throw new ProductDoesNotHaveTheSameSellerException($productPrice->productId());
         } elseif (!$productLine->productPrice()->price()->equals($productPrice->price())) {
             throw new ProductDoesNotHaveTheSamePriceException($productPrice->productId());
         }
-
     }
 
     public function updateProductUnits(ProductPrice $productPrice, Units $newQuantity) : void
     {
         $productLine = $this->findProductLine($productPrice);
 
-        if(is_null($productLine)){
+        if (is_null($productLine)) {
             throw new ProductDoesNotHaveTheSameProductPriceException($productPrice->productId());
         }
 
-        if($productLine->units()->equals($newQuantity)){
+        if ($productLine->units()->equals($newQuantity)) {
             return;
         }
 
-        if($newQuantity->gt($productLine->units())){
+        if ($newQuantity->gt($productLine->units())) {
             $this->increaseProductUnits(
                 $productLine,
                 $newQuantity->minus($productLine->units())
             );
-        }else{
+        } else {
             $this->decreaseProductUnits(
                 $productLine,
                 $productLine->units()->minus($newQuantity)

@@ -10,6 +10,7 @@ use Appto\ShoppingCart\Domain\CartId;
 use Appto\ShoppingCart\Domain\ProductDoesNotHaveTheSamePriceException;
 use Appto\ShoppingCart\Domain\ProductDoesNotHaveTheSameProductPriceException;
 use Appto\ShoppingCart\Domain\ProductDoesNotHaveTheSameSellerException;
+use Appto\ShoppingCart\Domain\Units;
 
 class CartTest extends UnitTest
 {
@@ -182,11 +183,27 @@ class CartTest extends UnitTest
         self::assertTrue($cart->productLines()->isEmpty());
     }
 
-    public function testUpdateProductUnits() : void
+    public function testIncreaseProductUnits() : void
     {
         $cart = CartMother::random();
         $product = ProductLineMother::random();
         $newQuantity = $product->units()->multiply(2);
+        $cart->addProduct(
+            $product->name(),
+            $product->productPrice(),
+            $product->units()
+        );
+        $cart->updateProductUnits($product->productPrice(), $newQuantity);
+
+        self::assertEquals(1, $cart->productLines()->count());
+        self::assertEquals($newQuantity, $cart->productLines()->first()->units());
+    }
+
+    public function testDecreaseProductUnits() : void
+    {
+        $cart = CartMother::random();
+        $product = ProductLineMother::randomWithUnits(5);
+        $newQuantity = new Units(2);
         $cart->addProduct(
             $product->name(),
             $product->productPrice(),

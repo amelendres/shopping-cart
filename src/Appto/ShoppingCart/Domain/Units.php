@@ -32,19 +32,4 @@ class Units extends IntegerValueObject
     {
         return $this->value > $other->value();
     }
-
-    public function gte(Units $other): bool
-    {
-        return $this->value >= $other->value();
-    }
-
-    public function lt(Units $other): bool
-    {
-        return $this->value < $other->value();
-    }
-
-    public function lte(Units $other): bool
-    {
-        return $this->value <= $other->value();
-    }
 }

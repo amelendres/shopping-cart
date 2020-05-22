@@ -24,6 +24,15 @@ class ProductLineMother extends Mother
         );
     }
 
+    public static function randomWithUnits(int $units) : ProductLine
+    {
+        return new ProductLine(
+            SimpleVOMother::random(ProductName::class, self::faker()->text(48)),
+            ProductPriceMother::random(),
+            new Units($units)
+        );
+    }
+
     public static function randomWithDifferentSeller(ProductLine $productLine) : ProductLine
     {
         return new ProductLine(
@@ -47,19 +56,6 @@ class ProductLineMother extends Mother
                 MoneyMother::random()
             ),
             new Units(self::faker()->numberBetween(1,20))
-        );
-    }
-
-    public static function randomWithDifferentQuantity(ProductLine $productLine) : ProductLine
-    {
-        return new ProductLine(
-            $productLine->name(),
-            new ProductPrice(
-                $productLine->productPrice()->productId(),
-                $productLine->productPrice()->sellerId(),
-                MoneyMother::random()
-            ),
-            new Units(self::faker()->numberBetween(10,20))
         );
     }
 
