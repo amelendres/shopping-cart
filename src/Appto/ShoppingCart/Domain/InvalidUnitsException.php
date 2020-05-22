@@ -2,7 +2,7 @@
 
 namespace Appto\ShoppingCart\Domain;
 
-class InvalidQuantityException extends \DomainException
+class InvalidUnitsException extends \DomainException
 {
     public function __construct(int $value)
     {

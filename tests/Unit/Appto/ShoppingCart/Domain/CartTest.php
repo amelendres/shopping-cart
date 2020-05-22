@@ -8,6 +8,7 @@ use Appto\ShoppingCart\Domain\BuyerId;
 use Appto\ShoppingCart\Domain\Cart;
 use Appto\ShoppingCart\Domain\CartId;
 use Appto\ShoppingCart\Domain\ProductDoesNotHaveTheSamePriceException;
+use Appto\ShoppingCart\Domain\ProductDoesNotHaveTheSameProductPriceException;
 use Appto\ShoppingCart\Domain\ProductDoesNotHaveTheSameSellerException;
 
 class CartTest extends UnitTest
@@ -20,127 +21,197 @@ class CartTest extends UnitTest
         );
 
         self::assertTrue($cart->productLines()->isEmpty());
+        self::assertEquals(0, $cart->summary()->units()->value());
+        self::assertEquals(0, $cart->summary()->price()->amount());
     }
 
-    public function testAddFirstProductLineToCartSuccess() : void
+    public function testAddFirstProductSuccess() : void
     {
         $cart = CartMother::random();
         $product = ProductLineMother::random();
-        $cart->addProductLine(
+        $cart->addProduct(
             $product->name(),
             $product->productPrice(),
-            $product->quantity()
+            $product->units()
         );
         self::assertEquals(1, $cart->productLines()->count());
     }
 
-    public function testAddProductLineToCartSuccess() : void
+    public function testAddTwoDifferentProductsSuccess() : void
     {
         $cart = CartMother::random();
         $product = ProductLineMother::random();
-        $cart->addProductLine(
+        $other = ProductLineMother::random();
+        $cart->addProduct(
             $product->name(),
             $product->productPrice(),
-            $product->quantity()
+            $product->units()
         );
-        self::assertEquals(1, $cart->productLines()->count());
+        $cart->addProduct(
+            $other->name(),
+            $other->productPrice(),
+            $other->units()
+        );
+        self::assertEquals(2, $cart->productLines()->count());
+        self::assertEquals(
+            $product->units()->add($other->units())->value(),
+            $cart->summary()->units()->value());
     }
 
-    public function testAddProductLineThatAlreadyExists() : void
+    public function testAddProductThatAlreadyExists() : void
     {
         $cart = CartMother::random();
-        $productLine = ProductLineMother::random();
-        $cart->addProductLine(
-            $productLine->name(),
-            $productLine->productPrice(),
-            $productLine->quantity()
+        $product = ProductLineMother::random();
+        $cart->addProduct(
+            $product->name(),
+            $product->productPrice(),
+            $product->units()
         );
-        $cart->addProductLine(
-            $productLine->name(),
-            $productLine->productPrice(),
-            $productLine->quantity()
+        $cart->addProduct(
+            $product->name(),
+            $product->productPrice(),
+            $product->units()
         );
+
         self::assertEquals(1, $cart->productLines()->count());
-        self::assertEquals($productLine->quantity()->multiply(2), $cart->total()->numberOfProducts());
+        self::assertEquals(
+            $product->units()->multiply(2)->value(),
+            $cart->summary()->units()->value()
+        );
     }
 
-    public function testAddProductLineFailsWithSameProductAndDifferentSeller() : void
+    public function testAddProductFailsWithSameProductAndDifferentSeller() : void
     {
         $this->expectException(ProductDoesNotHaveTheSameSellerException::class);
 
         $cart = CartMother::random();
-        $productLine = ProductLineMother::random();
-        $other = ProductLineMother::randomWithDifferentSeller($productLine);
-        $cart->addProductLine(
-            $productLine->name(),
-            $productLine->productPrice(),
-            $productLine->quantity()
+        $product = ProductLineMother::random();
+        $other = ProductLineMother::randomWithDifferentSeller($product);
+        $cart->addProduct(
+            $product->name(),
+            $product->productPrice(),
+            $product->units()
         );
-        $cart->addProductLine(
+        $cart->addProduct(
             $other->name(),
             $other->productPrice(),
-            $other->quantity()
+            $other->units()
         );
     }
 
-    public function testAddProductLineFailsWithSameProductAndDifferentPrice() : void
+    public function testAddProductFailsWithSameProductAndDifferentPrice() : void
     {
         $this->expectException(ProductDoesNotHaveTheSamePriceException::class);
 
         $cart = CartMother::random();
-        $productLine = ProductLineMother::random();
-        $other = ProductLineMother::randomWithDifferentPrice($productLine);
-        $cart->addProductLine(
-            $productLine->name(),
-            $productLine->productPrice(),
-            $productLine->quantity()
+        $product = ProductLineMother::random();
+        $other = ProductLineMother::randomWithDifferentPrice($product);
+        $cart->addProduct(
+            $product->name(),
+            $product->productPrice(),
+            $product->units()
         );
-        $cart->addProductLine(
+        $cart->addProduct(
             $other->name(),
             $other->productPrice(),
-            $other->quantity()
+            $other->units()
         );
     }
 
-    public function testRemoveProductLineByProduct() : void
+    public function testRemoveProduct() : void
     {
         $cart = CartMother::random();
-        $productLine = ProductLineMother::random();
+        $product = ProductLineMother::random();
         $other = ProductLineMother::random();
-        $cart->addProductLine(
-            $productLine->name(),
-            $productLine->productPrice(),
-            $productLine->quantity()
+        $cart->addProduct(
+            $product->name(),
+            $product->productPrice(),
+            $product->units()
         );
-        $cart->addProductLine(
+        $cart->addProduct(
             $other->name(),
             $other->productPrice(),
-            $other->quantity()
+            $other->units()
         );
 
-        $cart->removeProductLine($productLine->productPrice()->productId());
+        $cart->removeProduct($product->productPrice()->productId());
         self::assertEquals(1, $cart->productLines()->count());
         self::assertEquals($other, $cart->productLines()->first());
     }
 
-    public function testRemoveProductLinesFromSeller() : void
+    public function testRemoveAllProducts() : void
     {
         $cart = CartMother::random();
-        $productLine = ProductLineMother::random();
-        $other = ProductLineMother::randomWithSeller($productLine->productPrice()->sellerId());
-        $cart->addProductLine(
-            $productLine->name(),
-            $productLine->productPrice(),
-            $productLine->quantity()
+        $product = ProductLineMother::random();
+        $other = ProductLineMother::random();
+        $cart->addProduct(
+            $product->name(),
+            $product->productPrice(),
+            $product->units()
         );
-        $cart->addProductLine(
+        $cart->addProduct(
             $other->name(),
             $other->productPrice(),
-            $other->quantity()
+            $other->units()
         );
 
-        $cart->removeProductLinesFromSeller($productLine->productPrice()->sellerId());
+        $cart->removeProduct($product->productPrice()->productId());
+        $cart->removeProduct($other->productPrice()->productId());
+        self::assertEquals(0, $cart->productLines()->count());
+        self::assertEquals(0, $cart->summary()->units()->value());
+    }
+
+    public function testRemoveProductsFromSeller() : void
+    {
+        $cart = CartMother::random();
+        $product = ProductLineMother::random();
+        $other = ProductLineMother::randomWithSeller($product->productPrice()->sellerId());
+        $cart->addProduct(
+            $product->name(),
+            $product->productPrice(),
+            $product->units()
+        );
+        $cart->addProduct(
+            $other->name(),
+            $other->productPrice(),
+            $other->units()
+        );
+
+        $cart->removeProductsFromSeller($product->productPrice()->sellerId());
+
         self::assertTrue($cart->productLines()->isEmpty());
     }
 
+    public function testUpdateProductUnits() : void
+    {
+        $cart = CartMother::random();
+        $product = ProductLineMother::random();
+        $newQuantity = $product->units()->multiply(2);
+        $cart->addProduct(
+            $product->name(),
+            $product->productPrice(),
+            $product->units()
+        );
+        $cart->updateProductUnits($product->productPrice(), $newQuantity);
+
+        self::assertEquals(1, $cart->productLines()->count());
+        self::assertEquals($newQuantity, $cart->productLines()->first()->units());
+    }
+
+    public function testUpdateProductUnitsFailWithDifferentPrice() : void
+    {
+        $this->expectException(ProductDoesNotHaveTheSameProductPriceException::class);
+
+        $cart = CartMother::random();
+        $product = ProductLineMother::random();
+        $other = ProductLineMother::randomWithDifferentPrice($product);
+        $newQuantity = $product->units()->multiply(2);
+        $cart->addProduct(
+            $product->name(),
+            $product->productPrice(),
+            $product->units()
+        );
+
+        $cart->updateProductUnits($other->productPrice(), $newQuantity);
+    }
 }

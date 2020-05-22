@@ -2,14 +2,13 @@
 
 namespace Test\Unit\Appto\ShoppingCart\Domain;
 
-use Appto\Common\Domain\Money\Money;
 use Appto\Common\Infrastructure\PHPUnit\Mother;
 use Appto\Common\Infrastructure\PHPUnit\Mother\UuidMother;
 use Appto\ShoppingCart\Domain\ProductId;
 use Appto\ShoppingCart\Domain\ProductLine;
 use Appto\ShoppingCart\Domain\ProductName;
 use Appto\ShoppingCart\Domain\ProductPrice;
-use Appto\ShoppingCart\Domain\Quantity;
+use Appto\ShoppingCart\Domain\Units;
 use Appto\ShoppingCart\Domain\SellerId;
 use Appto\ShoppingCart\Infrastructure\PHPUnit\Mother\SimpleVOMother;
 use Test\Unit\Appto\Common\Domain\MoneyMother;
@@ -21,7 +20,7 @@ class ProductLineMother extends Mother
         return new ProductLine(
             SimpleVOMother::random(ProductName::class, self::faker()->text(48)),
             ProductPriceMother::random(),
-            new Quantity(self::faker()->numberBetween(1,10))
+            new Units(self::faker()->numberBetween(1,10))
         );
     }
 
@@ -34,7 +33,7 @@ class ProductLineMother extends Mother
                 UuidMother::random(SellerId::class),
                 $productLine->productPrice()->price()
             ),
-            new Quantity(self::faker()->numberBetween(1,20))
+            new Units(self::faker()->numberBetween(1,20))
         );
     }
 
@@ -47,7 +46,20 @@ class ProductLineMother extends Mother
                 $productLine->productPrice()->sellerId(),
                 MoneyMother::random()
             ),
-            new Quantity(self::faker()->numberBetween(1,20))
+            new Units(self::faker()->numberBetween(1,20))
+        );
+    }
+
+    public static function randomWithDifferentQuantity(ProductLine $productLine) : ProductLine
+    {
+        return new ProductLine(
+            $productLine->name(),
+            new ProductPrice(
+                $productLine->productPrice()->productId(),
+                $productLine->productPrice()->sellerId(),
+                MoneyMother::random()
+            ),
+            new Units(self::faker()->numberBetween(10,20))
         );
     }
 
@@ -60,7 +72,7 @@ class ProductLineMother extends Mother
                 $sellerId,
                 MoneyMother::random()
             ),
-            new Quantity(self::faker()->numberBetween(1,20))
+            new Units(self::faker()->numberBetween(1,20))
         );
     }
 }

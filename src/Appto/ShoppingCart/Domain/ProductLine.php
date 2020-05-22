@@ -8,38 +8,39 @@ class ProductLine
 {
     private $name;
     private $productPrice;
-    private $quantity;
-
-    private $totalPrice;
+    private $units;
 
     public function __construct(
         ProductName $name,
         ProductPrice $productPrice,
-        Quantity $quantity
+        Units $units
     ) {
         $this->name = $name;
         $this->productPrice = $productPrice;
-        $this->quantity = $quantity;
-
-        $this->updateTotalPrice();
+        $this->units = $units;
     }
 
-    private function updateTotalPrice(): void
-    {
-        $this->totalPrice = $this->productPrice->price()->multiply($this->quantity->value());
-    }
-
-    public function add(ProductLine $other): ProductLine
+    public function addUnits(Units $units): ProductLine
     {
         return new self(
             $this->name,
-            new ProductPrice(
-                $this->productPrice->productId(),
-                $this->productPrice->sellerId(),
-                $this->productPrice->price()->add($other->productPrice()->price())
-            ),
-            $this->quantity->add($other->quantity()),
+            $this->productPrice,
+            $this->units->add($units),
         );
+    }
+
+    public function removeUnits(Units $units): ProductLine
+    {
+        return new self(
+            $this->name,
+            $this->productPrice,
+            $this->units->minus($units),
+        );
+    }
+
+    public function totalPrice(): Money
+    {
+        return $this->productPrice->price()->multiply($this->units->value());
     }
 
     public function name() : ProductName
@@ -52,13 +53,8 @@ class ProductLine
         return $this->productPrice;
     }
 
-    public function quantity() : Quantity
+    public function units() : Units
     {
-        return $this->quantity;
-    }
-
-    public function totalPrice(): Money
-    {
-        return $this->totalPrice;
+        return $this->units;
     }
 }
