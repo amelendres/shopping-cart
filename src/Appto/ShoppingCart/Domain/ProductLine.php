@@ -10,6 +10,9 @@ class ProductLine
     private $productPrice;
     private $units;
 
+    /** @var string $entityId ONLY FOR DOCTRINE MAPPING*/
+    private $entityId;
+
     public function __construct(
         ProductName $name,
         ProductPrice $productPrice,

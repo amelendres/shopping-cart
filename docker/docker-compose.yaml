@@ -43,6 +43,8 @@ services:
         restart: unless-stopped
         ports:
             - "3306:3306"
+        networks:
+            - appto-dev
         environment:
             MYSQL_ROOT_PASSWORD: root
         volumes:

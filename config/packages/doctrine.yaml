@@ -7,9 +7,15 @@ doctrine:
         naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_mapping: true
         mappings:
-        #            App:
-        #                is_bundle: false
-        #                type: annotation
-        #                dir: '%kernel.project_dir%/src/Entity'
-        #                prefix: 'App\Entity'
-        #                alias: App
+
+            common:
+                type: xml
+                dir: "%kernel.project_dir%/src/Appto/Common/Infrastructure/Persistence/Doctrine/Mapping"
+                prefix: Appto\Common\Domain
+                is_bundle: false
+
+            shoppingcart:
+                type: xml
+                dir: "%kernel.root_dir%/../../../../Appto/ShoppingCart/Infrastructure/Persistence/Doctrine/Entity/Mapping"
+                prefix: Appto\ShoppingCart\Domain
+                is_bundle: false

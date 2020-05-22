@@ -1,0 +1,10 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+        <embeddable name="Appto\ShoppingCart\Domain\ProductPrice">
+                <embedded name="productId" class="Appto\ShoppingCart\Domain\ProductId" use-column-prefix="false"/>
+                <embedded name="sellerId" class="Appto\ShoppingCart\Domain\SellerId" use-column-prefix="false"/>
+                <embedded name="price" class="Appto\Common\Domain\Money\Money" />
+        </embeddable>
+</doctrine-mapping>
