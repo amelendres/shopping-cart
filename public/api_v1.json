@@ -63,10 +63,96 @@
                     }
                 }
             }
+        },
+        "/carts": {
+            "post": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Create Cart",
+                "description": "Create a cart",
+                "operationId": "createCart",
+                "requestBody": {
+                    "request": "Cart",
+                    "description": "Cart object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CartView"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/carts/{id}/products/{productId}": {
+            "delete": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Remove a Product from Cart",
+                "description": "Remove a product form cart",
+                "operationId": "removeProduct",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Cart id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "description": "Product id to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
         }
     },
     "components": {
         "schemas": {
+            "CartView": {
+                "title": "Cart Model",
+                "description": "Cart model",
+                "required": [
+                    "id",
+                    "buyerId"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "format": "uuid"
+                    },
+                    "buyerId": {
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "CartView"
+                }
+            },
             "MoneyView": {
                 "title": "Money Model",
                 "description": "Money model",

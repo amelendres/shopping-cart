@@ -3,21 +3,20 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                           https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="Appto\ShoppingCart\Domain\Cart" table="sc_cart" >
+    <entity name="Appto\ShoppingCart\Domain\Cart" table="sc_cart">
         <embedded name="id" class="Appto\ShoppingCart\Domain\CartId" use-column-prefix="false"/>
         <embedded name="buyerId" class="Appto\ShoppingCart\Domain\BuyerId" use-column-prefix="false"/>
-        <many-to-many field="productLines" target-entity="Appto\ShoppingCart\Domain\ProductLine">
+        <!--        <many-to-many field="productLines" target-entity="Appto\ShoppingCart\Domain\ProductLine"  fetch="EXTRA_LAZY" index-by="cart_id">-->
+        <many-to-many field="productLines" target-entity="Appto\ShoppingCart\Domain\ProductLine" fetch="EAGER" orphan-removal="true">
+            <cascade><cascade-all/></cascade>
             <join-table name="sc_cart_product_lines">
                 <join-columns>
-                    <join-column name="cart_id" referenced-column-name="id"/>
+                    <join-column name="cart_id" referenced-column-name="id" />
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="product_line_id" referenced-column-name="entity_id"/>
+                    <join-column name="product_line_id" referenced-column-name="entity_id" on-delete="CASCADE"/>
                 </inverse-join-columns>
             </join-table>
-            <cascade>
-                <cascade-all/>
-            </cascade>
         </many-to-many>
 
     </entity>

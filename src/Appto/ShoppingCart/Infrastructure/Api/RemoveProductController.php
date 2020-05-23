@@ -2,7 +2,7 @@
 
 namespace Appto\ShoppingCart\Infrastructure\Api;
 
-use Appto\ShoppingCart\Application\Command\AddProductCommand;
+use Appto\ShoppingCart\Application\Command\RemoveProductCommand;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use OpenApi\Annotations as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,25 +16,35 @@ use Symfony\Component\Routing\Annotation\Route;
  *     "/carts", name="carts_"
  * )
  */
-class AddProductController extends AbstractController
+class RemoveProductController extends AbstractController
 {
     /**
      * @Route(
-     *     "/{id}/products",
-     *     methods={"POST"},
-     *     name="addProduct"
+     *     "/{id}/products/{productId}",
+     *     methods={"DELETE"},
+     *     name="removeProduct"
      * )
      *
-     * @OA\Post(
-     *     path="/carts/{id}/products",
+     * @OA\Delete(
+     *     path="/carts/{id}/products/{productId}",
      *     tags={"Cart"},
-     *     summary="Add Product to Cart",
-     *     description="Add product to cart",
-     *     operationId="addProduct",
+     *     summary="Remove a Product from Cart",
+     *     description="Remove a product form cart",
+     *     operationId="removeProduct",
      *     @OA\Parameter(
      *          name="id",
      *          in="path",
-     *          description="ID of cart",
+     *          description="Cart id",
+     *          required=true,
+     *              @OA\Schema(
+     *                  type="string",
+     *                  format="uuid"
+     *              )
+     *      ),
+     *      @OA\Parameter(
+     *          name="productId",
+     *          in="path",
+     *          description="Product id to delete",
      *          required=true,
      *              @OA\Schema(
      *                  type="string",
@@ -44,26 +54,15 @@ class AddProductController extends AbstractController
      *     @OA\Response(
      *          response=200,
      *          description="Success"
-     *     ),
-     *     @OA\RequestBody(
-     *          request="Product",
-     *          description="Product object",
-     *          required=true,
-     *          @OA\JsonContent(ref="#/components/schemas/ProductLineView")
-     *      )
+     *     )
      * )
      */
-    public function addProduct(Request $request, string $id, MessageBusInterface $commandBus)
+    public function removeProduct(Request $request, string $id, string $productId, MessageBusInterface $commandBus)
     {
         $body = json_decode((string)$request->getContent());
-        $commandBus->dispatch(new AddProductCommand(
+        $commandBus->dispatch(new RemoveProductCommand(
             $id,
-            $body->productId,
-            $body->name,
-            $body->sellerId,
-            $body->price->amount,
-            $body->price->currency,
-            $body->qty,
+            $productId
         ));
 
         return new JsonResponse(null, Response::HTTP_OK);

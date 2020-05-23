@@ -90,9 +90,10 @@ class Cart
 
     private function findProductLine(ProductPrice $productPrice) : ?ProductLine
     {
-        $productLine = $this->productLines()->get((string)$productPrice->productId());
-        if ($productLine && $productLine->productPrice()->equals($productPrice)) {
-            return $productLine;
+        foreach ($this->productLines() as $productLine) {
+            if ($productLine->productPrice()->equals($productPrice)) {
+                return $productLine;
+            }
         }
 
         return null;
@@ -100,7 +101,13 @@ class Cart
 
     private function findProductLineByProduct(ProductId $productId) : ?ProductLine
     {
-        return $this->productLines()->get((string)$productId);
+        foreach ($this->productLines() as $productLine) {
+            if ($productLine->productPrice()->productId()->equals($productId)) {
+                return $productLine;
+            }
+        }
+
+        return null;
     }
 
     private function increaseProductUnits(ProductLine $productLine, Units $units) : void
