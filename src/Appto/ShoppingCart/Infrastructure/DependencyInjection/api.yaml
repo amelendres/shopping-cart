@@ -2,4 +2,7 @@ services:
     _defaults:
         autowire: true
 
+    Appto\ShoppingCart\Infrastructure\Api\:
+        resource: '%kernel.project_dir%/src/Appto/ShoppingCart/Infrastructure/Api/*Controller.php'
+        tags: [ controller.service_arguments ]
 

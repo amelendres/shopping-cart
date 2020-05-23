@@ -1,5 +1,10 @@
 services:
-    # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    Appto\ShoppingCart\Infrastructure\Persistence\Doctrine\:
+        resource: '%kernel.project_dir%/src/Appto/ShoppingCart/Infrastructure/Persistence/Doctrine/{Entity,*Repository.php}'
+        autoconfigure: true
+
+    Appto\ShoppingCart\Domain\CartRepository: '@Appto\ShoppingCart\Infrastructure\Persistence\Doctrine\DoctrineCartRepository'

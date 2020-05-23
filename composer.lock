@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f29badb47053a6b74abfd48f3dcbfaf4",
+    "content-hash": "d66672696a17c5d340622663cdb5206a",
     "packages": [
         {
             "name": "appto/php-value-objects",
-            "version": "0.4.2",
+            "version": "0.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amelendres/php-value-objects.git",
-                "reference": "f361b65d02e9ee3c302fe2023bb29e8ab9f718da"
+                "reference": "f0763f367b56b852339a137e83d0dcacc0420533"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amelendres/php-value-objects/zipball/f361b65d02e9ee3c302fe2023bb29e8ab9f718da",
-                "reference": "f361b65d02e9ee3c302fe2023bb29e8ab9f718da",
+                "url": "https://api.github.com/repos/amelendres/php-value-objects/zipball/f0763f367b56b852339a137e83d0dcacc0420533",
+                "reference": "f0763f367b56b852339a137e83d0dcacc0420533",
                 "shasum": ""
             },
             "require": {
@@ -44,7 +44,7 @@
                 }
             ],
             "description": "PHP value objects",
-            "time": "2020-05-18T17:50:41+00:00"
+            "time": "2020-05-22T18:40:54+00:00"
         },
         {
             "name": "composer/package-versions-deprecated",

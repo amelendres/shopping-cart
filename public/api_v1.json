@@ -1,0 +1,133 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Appto Shopping Cart",
+        "description": "Shopping Cart API",
+        "contact": {
+            "name": "Alfredo Melendres",
+            "email": "alfredo.melendres@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "{schema}://localhost:8030/api/v1",
+            "description": "Appto Shopping Cart API Mocking",
+            "variables": {
+                "schema": {
+                    "enum": [
+                        "https",
+                        "http"
+                    ],
+                    "default": "http"
+                }
+            }
+        }
+    ],
+    "paths": {
+        "/carts/{id}/products": {
+            "post": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Add Product to Cart",
+                "description": "Add product to cart",
+                "operationId": "addProduct",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of cart",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "request": "Product",
+                    "description": "Product object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProductLineView"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "MoneyView": {
+                "title": "Money Model",
+                "description": "Money model",
+                "required": [
+                    "amount",
+                    "currency"
+                ],
+                "properties": {
+                    "amount": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "currency": {
+                        "type": "string"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "MoneyView"
+                }
+            },
+            "ProductLineView": {
+                "title": "ProductLine model",
+                "description": "ProductLine model",
+                "required": [
+                    "productId",
+                    "name",
+                    "price",
+                    "sellerId",
+                    "qty"
+                ],
+                "properties": {
+                    "productId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "$ref": "#/components/schemas/MoneyView"
+                    },
+                    "sellerId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "qty": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "ProductLineView"
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Cart",
+            "description": "Everything about Cart"
+        }
+    ]
+}

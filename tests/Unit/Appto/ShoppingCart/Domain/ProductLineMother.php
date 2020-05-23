@@ -10,7 +10,7 @@ use Appto\ShoppingCart\Domain\ProductName;
 use Appto\ShoppingCart\Domain\ProductPrice;
 use Appto\ShoppingCart\Domain\Units;
 use Appto\ShoppingCart\Domain\SellerId;
-use Appto\ShoppingCart\Infrastructure\PHPUnit\Mother\SimpleVOMother;
+use Appto\Common\Infrastructure\PHPUnit\Mother\SimpleVOMother;
 use Test\Unit\Appto\Common\Domain\MoneyMother;
 
 class ProductLineMother extends Mother

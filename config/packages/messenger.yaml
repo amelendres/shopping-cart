@@ -5,6 +5,7 @@ framework:
         buses:
             command.bus:
                 middleware:
+                    - 'Appto\Common\Infrastructure\Symfony\Messenger\FailureCatcherMiddleware'
                     - validation
                     - doctrine_transaction
             query.bus:
