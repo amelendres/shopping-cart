@@ -59,7 +59,6 @@ class RemoveProductController extends AbstractController
      */
     public function removeProduct(Request $request, string $id, string $productId, MessageBusInterface $commandBus)
     {
-        $body = json_decode((string)$request->getContent());
         $commandBus->dispatch(new RemoveProductCommand(
             $id,
             $productId

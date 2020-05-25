@@ -7,6 +7,7 @@ use Appto\Common\Infrastructure\PHPUnit\UnitTest;
 use Appto\ShoppingCart\Domain\BuyerId;
 use Appto\ShoppingCart\Domain\Cart;
 use Appto\ShoppingCart\Domain\CartId;
+use Appto\ShoppingCart\Domain\InvalidProductDecreaseQuantityException;
 use Appto\ShoppingCart\Domain\ProductDoesNotHaveTheSamePriceException;
 use Appto\ShoppingCart\Domain\ProductDoesNotHaveTheSameProductPriceException;
 use Appto\ShoppingCart\Domain\ProductDoesNotHaveTheSameSellerException;
@@ -185,50 +186,60 @@ class CartTest extends UnitTest
 
     public function testIncreaseProductUnits() : void
     {
-        $cart = CartMother::random();
         $product = ProductLineMother::random();
-        $newQuantity = $product->units()->multiply(2);
-        $cart->addProduct(
-            $product->name(),
-            $product->productPrice(),
-            $product->units()
-        );
-        $cart->updateProductUnits($product->productPrice(), $newQuantity);
+        $cart = CartMother::randomWithProduct($product);
+        $quantity = new Units($this->faker->numberBetween(1,10));
+
+        $cart->increaseProductUnits($product->productPrice(), $quantity) ;
 
         self::assertEquals(1, $cart->productLines()->count());
-        self::assertEquals($newQuantity, $cart->productLines()->first()->units());
+        self::assertEquals($product->units()->add($quantity), $cart->productLines()->first()->units());
     }
 
     public function testDecreaseProductUnits() : void
     {
-        $cart = CartMother::random();
         $product = ProductLineMother::randomWithUnits(5);
-        $newQuantity = new Units(2);
-        $cart->addProduct(
-            $product->name(),
-            $product->productPrice(),
-            $product->units()
-        );
-        $cart->updateProductUnits($product->productPrice(), $newQuantity);
+        $cart = CartMother::randomWithProduct($product);
+        $quantity = new Units(2);
+
+        $cart->decreaseProductUnits($product->productPrice(), $quantity) ;
 
         self::assertEquals(1, $cart->productLines()->count());
-        self::assertEquals($newQuantity, $cart->productLines()->first()->units());
+        self::assertEquals(3, $cart->productLines()->first()->units()->value());
     }
 
-    public function testUpdateProductUnitsFailWithDifferentPrice() : void
+    public function testDecreaseProductUnitsRemovesProduct() : void
+    {
+        $product = ProductLineMother::randomWithUnits(5);
+        $cart = CartMother::randomWithProduct($product);
+        $quantity = new Units(5);
+
+        $cart->decreaseProductUnits($product->productPrice(), $quantity) ;
+
+        self::assertEquals(0, $cart->productLines()->count());
+        self::assertEquals(0, $cart->summary()->units()->value());
+    }
+
+    public function testDecreaseProductUnitsFailsWithHigherQuantity() : void
+    {
+        $this->expectException(InvalidProductDecreaseQuantityException::class);
+
+        $product = ProductLineMother::randomWithUnits(5);
+        $cart = CartMother::randomWithProduct($product);
+        $quantity = new Units(6);
+
+        $cart->decreaseProductUnits($product->productPrice(), $quantity) ;
+    }
+
+    public function testIncreaseProductUnitsFailsWithDifferentPrice() : void
     {
         $this->expectException(ProductDoesNotHaveTheSameProductPriceException::class);
 
-        $cart = CartMother::random();
         $product = ProductLineMother::random();
+        $cart = CartMother::randomWithProduct($product);
         $other = ProductLineMother::randomWithDifferentPrice($product);
-        $newQuantity = $product->units()->multiply(2);
-        $cart->addProduct(
-            $product->name(),
-            $product->productPrice(),
-            $product->units()
-        );
+        $quantity = new Units(1);
 
-        $cart->updateProductUnits($other->productPrice(), $newQuantity);
+        $cart->increaseProductUnits($other->productPrice(), $quantity);
     }
 }

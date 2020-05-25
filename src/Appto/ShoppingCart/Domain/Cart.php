@@ -38,37 +38,12 @@ class Cart
             $this->productLines()->set((string)$newProductLine->productPrice()->productId(), $newProductLine);
 
         } elseif ($productLine->productPrice()->equals($productPrice)) {
-            $this->increaseProductUnits($productLine, $units);
+            $this->increaseProductUnits($productLine->productPrice(), $units);
 
         } elseif (!$productLine->productPrice()->sellerId()->equals($productPrice->sellerId())) {
             throw new ProductDoesNotHaveTheSameSellerException($productPrice->productId());
         } elseif (!$productLine->productPrice()->price()->equals($productPrice->price())) {
             throw new ProductDoesNotHaveTheSamePriceException($productPrice->productId());
-        }
-    }
-
-    public function updateProductUnits(ProductPrice $productPrice, Units $newQuantity) : void
-    {
-        $productLine = $this->findProductLine($productPrice);
-
-        if (is_null($productLine)) {
-            throw new ProductDoesNotHaveTheSameProductPriceException($productPrice->productId());
-        }
-
-        if ($productLine->units()->equals($newQuantity)) {
-            return;
-        }
-
-        if ($newQuantity->gt($productLine->units())) {
-            $this->increaseProductUnits(
-                $productLine,
-                $newQuantity->minus($productLine->units())
-            );
-        } else {
-            $this->decreaseProductUnits(
-                $productLine,
-                $productLine->units()->minus($newQuantity)
-            );
         }
     }
 
@@ -88,7 +63,7 @@ class Cart
         }
     }
 
-    private function findProductLine(ProductPrice $productPrice) : ?ProductLine
+    public function productLine(ProductPrice $productPrice) : ProductLine
     {
         foreach ($this->productLines() as $productLine) {
             if ($productLine->productPrice()->equals($productPrice)) {
@@ -96,7 +71,7 @@ class Cart
             }
         }
 
-        return null;
+        throw new ProductDoesNotHaveTheSameProductPriceException($productPrice->productId());
     }
 
     private function findProductLineByProduct(ProductId $productId) : ?ProductLine
@@ -110,20 +85,40 @@ class Cart
         return null;
     }
 
-    private function increaseProductUnits(ProductLine $productLine, Units $units) : void
+    public function increaseProductUnits(ProductPrice $productPrice, Units $quantity) : void
     {
-        if ($this->productLines->containsKey((string)$productLine->productPrice()->productId())) {
-            $newProductLine = $productLine->addUnits($units);
-            $this->productLines()->set((string)$productLine->productPrice()->productId(), $newProductLine);
-        }
+        $currentProductLine = $this->productLine($productPrice);
+
+        $newProductLine = new ProductLine(
+            $currentProductLine->name(),
+            $currentProductLine->productPrice(),
+            $currentProductLine->units()->add($quantity),
+        );
+        $this->productLines->removeElement($currentProductLine);
+        $this->productLines->add($newProductLine);
+
     }
 
-    private function decreaseProductUnits(ProductLine $productLine, Units $units) : void
+    public function decreaseProductUnits(ProductPrice $productPrice, Units $quantity) : void
     {
-        if ($this->productLines->containsKey((string)$productLine->productPrice()->productId())) {
-            $newProductLine = $productLine->removeUnits($units);
-            $this->productLines()->set((string)$productLine->productPrice()->productId(), $newProductLine);
+        $currentProductLine = $this->productLine($productPrice);
+
+        if($currentProductLine->units()->lt($quantity)){
+            throw new InvalidProductDecreaseQuantityException($quantity->value());
         }
+
+        if($currentProductLine->units()->equals($quantity)){
+            $this->removeProduct($currentProductLine->productPrice()->productId());
+            return;
+        }
+
+        $newProductLine = new ProductLine(
+            $currentProductLine->name(),
+            $currentProductLine->productPrice(),
+            $currentProductLine->units()->minus($quantity),
+        );
+        $this->productLines->removeElement($currentProductLine);
+        $this->productLines->add($newProductLine);
     }
 
     /**

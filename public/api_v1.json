@@ -91,6 +91,84 @@
                 }
             }
         },
+        "/carts/{id}/products/decrease": {
+            "post": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Decrease Product Units",
+                "description": "Decrease product units",
+                "operationId": "decreaseProductUnits",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Cart id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "request": "Product",
+                    "description": "Product object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProductLineView"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/carts/{id}/products/increase": {
+            "post": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Increase Product Units",
+                "description": "Increase product units",
+                "operationId": "increaseProductUnits",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Cart id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "request": "Product",
+                    "description": "Product object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProductLineView"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
         "/carts/{id}/products/{productId}": {
             "delete": {
                 "tags": [

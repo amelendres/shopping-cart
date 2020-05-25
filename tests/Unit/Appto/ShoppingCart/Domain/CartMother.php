@@ -7,6 +7,8 @@ use Appto\Common\Infrastructure\PHPUnit\Mother\UuidMother;
 use Appto\ShoppingCart\Domain\BuyerId;
 use Appto\ShoppingCart\Domain\Cart;
 use Appto\ShoppingCart\Domain\CartId;
+use Appto\ShoppingCart\Domain\ProductLine;
+use Appto\ShoppingCart\Domain\ProductName;
 
 class CartMother extends Mother
 {
@@ -16,5 +18,22 @@ class CartMother extends Mother
             UuidMother::random(CartId::class),
             UuidMother::random(BuyerId::class)
         );
+    }
+
+    public static function randomWithProduct(ProductLine $productLine) : Cart
+    {
+        $cart = new Cart(
+            UuidMother::random(CartId::class),
+            UuidMother::random(BuyerId::class)
+        );
+
+        $cart->addProduct(
+            $productLine->name(),
+            $productLine->productPrice(),
+            $productLine->units()
+        );
+
+        return $cart;
+
     }
 }

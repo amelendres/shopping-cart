@@ -32,4 +32,9 @@ class Units extends IntegerValueObject
     {
         return $this->value > $other->value();
     }
+
+    public function lt(Units $other): bool
+    {
+        return $this->value < $other->value();
+    }
 }
