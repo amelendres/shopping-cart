@@ -2,8 +2,6 @@
 
 namespace Appto\ShoppingCart\Application\Command;
 
-use Appto\Common\Application\Command\Command;
-
 class CreateCartCommand
 {
     private $cartId;

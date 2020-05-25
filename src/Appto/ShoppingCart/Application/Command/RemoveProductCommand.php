@@ -2,8 +2,6 @@
 
 namespace Appto\ShoppingCart\Application\Command;
 
-use Appto\Common\Application\Command\Command;
-
 class RemoveProductCommand
 {
     private $cartId;

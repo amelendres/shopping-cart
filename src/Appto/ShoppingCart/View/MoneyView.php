@@ -28,4 +28,10 @@ class MoneyView
      * @var string
      */
     public $currency;
+
+    public function __construct(float $amount, string $currency)
+    {
+        $this->amount = $amount;
+        $this->currency = $currency;
+    }
 }

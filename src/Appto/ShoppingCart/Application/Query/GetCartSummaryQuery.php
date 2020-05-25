@@ -1,8 +1,8 @@
 <?php
 
-namespace Appto\ShoppingCart\Application\Command;
+namespace Appto\ShoppingCart\Application\Query;
 
-class RemoveCartCommand
+class GetCartSummaryQuery
 {
     private $cartId;
 

@@ -2,9 +2,7 @@
 
 namespace Appto\ShoppingCart\Application\Command;
 
-use Appto\ShoppingCart\Domain\BuyerId;
 use Appto\ShoppingCart\Domain\CartRepository;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class RemoveCartCommandHandler
 {
