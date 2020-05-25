@@ -1,0 +1,360 @@
+{
+	"info": {
+		"_postman_id": "8e297637-a9f9-45a5-9d73-1f7fd64b1b53",
+		"name": "ShoppingCart",
+		"description": "Shopping Cart Context",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Cart With custom ID",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": \"22a10281-495b-4378-8365-985ac3e124f1\",\n  \"buyerId\": \"{{$guid}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8030/api/v1/carts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8030",
+					"path": [
+						"api",
+						"v1",
+						"carts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Product [Custom]",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"productId\": \"9b7c4fa7-eeab-4531-9bff-584a8fb5adae\",\n  \"name\": \"Ibuprofeto 400\",\n  \"price\": {\n    \"amount\": 2.50,\n    \"currency\": \"EUR\"\n  },\n  \"sellerId\": \"449eb767-15f6-42f5-b1d1-a949c952c83d\",\n  \"qty\": 5\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8030/api/v1/carts/22a10281-495b-4378-8365-985ac3e124f1/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8030",
+					"path": [
+						"api",
+						"v1",
+						"carts",
+						"22a10281-495b-4378-8365-985ac3e124f1",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Increase Product",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"productId\": \"9b7c4fa7-eeab-4531-9bff-584a8fb5adae\",\n  \"name\": \"Ibuprofeto 400\",\n  \"price\": {\n    \"amount\": 2.50,\n    \"currency\": \"EUR\"\n  },\n  \"sellerId\": \"449eb767-15f6-42f5-b1d1-a949c952c83d\",\n  \"qty\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8030/api/v1/carts/22a10281-495b-4378-8365-985ac3e124f1/products/increase",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8030",
+					"path": [
+						"api",
+						"v1",
+						"carts",
+						"22a10281-495b-4378-8365-985ac3e124f1",
+						"products",
+						"increase"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Decrease Product",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"productId\": \"9b7c4fa7-eeab-4531-9bff-584a8fb5adae\",\n  \"name\": \"Ibuprofeto 400\",\n  \"price\": {\n    \"amount\": 2.50,\n    \"currency\": \"EUR\"\n  },\n  \"sellerId\": \"449eb767-15f6-42f5-b1d1-a949c952c83d\",\n  \"qty\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8030/api/v1/carts/22a10281-495b-4378-8365-985ac3e124f1/products/decrease",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8030",
+					"path": [
+						"api",
+						"v1",
+						"carts",
+						"22a10281-495b-4378-8365-985ac3e124f1",
+						"products",
+						"decrease"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Cart Summary [Custom]",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"devotionalId\": \"{{$guid}}\",\n    \"title\": \"Devotional Title {{$randomInt}}\",\n    \"content\": \"Content {{$randomInt}}\",\n    \"authorId\": \"{{$guid}}\",\n    \"publisherId\": \"{{$guid}}\",\n    \"topics\": [\n        {\n            \"topicId\": \"{{$guid}}\",\n            \"title\": \"topic title 1\"\n        },\n        {\n            \"topicId\": \"{{$guid}}\",\n            \"title\": \"topic title 2\"\n        }\n    ],\n    \"passage\": \n        {\n            \"bookName\": \"{{$guid}}\",\n            \"chapterNumber\": 1,\n            \"versionId\": \"RV1960\",\n            \"verseReference\": \"2\",\n            \"text\": \"Maridos amad a vuestras mujeres asi como Cristo amo a su iglesia y se entrego a si mismo por ella\"\n        }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8030/api/v1/carts/22a10281-495b-4378-8365-985ac3e124f1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8030",
+					"path": [
+						"api",
+						"v1",
+						"carts",
+						"22a10281-495b-4378-8365-985ac3e124f1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Cart",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": \"{{$guid}}\",\n  \"buyerId\": \"{{$guid}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8030/api/v1/carts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8030",
+					"path": [
+						"api",
+						"v1",
+						"carts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Product",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"productId\": \"{{$guid}}\",\n  \"name\": \"Test product {{$randomInt}}\",\n  \"price\": {\n    \"amount\": 5.50,\n    \"currency\": \"EUR\"\n  },\n  \"sellerId\": \"\",\n  \"qty\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8030/api/v1/carts/22a10281-495b-4378-8365-985ac3e124f1/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8030",
+					"path": [
+						"api",
+						"v1",
+						"carts",
+						"22a10281-495b-4378-8365-985ac3e124f1",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove Product",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8030/api/v1/carts/22a10281-495b-4378-8365-985ac3e124f1/products/9b7c4fa7-eeab-4531-9bff-584a8fb5adae",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8030",
+					"path": [
+						"api",
+						"v1",
+						"carts",
+						"22a10281-495b-4378-8365-985ac3e124f1",
+						"products",
+						"9b7c4fa7-eeab-4531-9bff-584a8fb5adae"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove Cart [Custom]",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8030/api/v1/carts/22a10281-495b-4378-8365-985ac3e124f1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8030",
+					"path": [
+						"api",
+						"v1",
+						"carts",
+						"22a10281-495b-4378-8365-985ac3e124f1"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer"
+	},
+	"protocolProfileBehavior": {}
+}

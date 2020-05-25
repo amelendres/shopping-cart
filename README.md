@@ -1,10 +1,9 @@
 # SHOPPING CART API
-#
 
-### Requirements
+### Prerequisites
 - Docker
 
-### Install
+### Installing
 
 Download repository
 ```
@@ -21,16 +20,28 @@ make build
 
 Create database
 ```
-make init-database
+make db
 ```
 
 ### HOW TO RUN 
 
-Run Tests 
+Run Tests: 
 ```
 make test
 ```
 
+
+Postman Collection:
+
+Import this collection into your postman application.
 ```
-make coverage
+tests/Acceptance/Collection/ShoppingCart.postman_collection.json
 ```
+
+
+[Api Doccumentation](http://localhost:8030/doc/index.htm)
+
+
+## Authors
+
+* **Alfredo Melendres** -  alfredo.melendres@gmail.com

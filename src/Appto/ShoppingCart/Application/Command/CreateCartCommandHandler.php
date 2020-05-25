@@ -6,6 +6,7 @@ use Appto\ShoppingCart\Domain\BuyerId;
 use Appto\ShoppingCart\Domain\Cart;
 use Appto\ShoppingCart\Domain\CartId;
 use Appto\ShoppingCart\Domain\CartRepository;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class CreateCartCommandHandler
 {
@@ -18,6 +19,11 @@ class CreateCartCommandHandler
 
     public function __invoke(CreateCartCommand $command) : void
     {
+        $cart = $this->cartRepository->find($command->cartId());
+        if ($cart) {
+            throw new BadRequestHttpException();
+        }
+
         $this->cartRepository->save(
             new Cart(
                 new CartId($command->cartId()),
