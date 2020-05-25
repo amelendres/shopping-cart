@@ -20,4 +20,9 @@ class DoctrineCartEntityRepository extends ServiceEntityRepository
     {
         $this->registry->getManager()->persist($cart);
     }
+
+    public function remove(Cart $cart): void
+    {
+        $this->registry->getManager()->remove($cart);
+    }
 }

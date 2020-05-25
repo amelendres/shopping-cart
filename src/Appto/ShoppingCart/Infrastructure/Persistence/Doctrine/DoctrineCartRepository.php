@@ -37,4 +37,9 @@ class DoctrineCartRepository implements CartRepository
     {
         $this->repository->save($cart);
     }
+
+    public function remove(Cart $cart) : void
+    {
+        $this->repository->remove($cart);
+    }
 }

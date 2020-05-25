@@ -169,6 +169,33 @@
                 }
             }
         },
+        "/carts/{id}": {
+            "delete": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Remove Cart",
+                "description": "Remove cart",
+                "operationId": "removeCart",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Cart id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
         "/carts/{id}/products/{productId}": {
             "delete": {
                 "tags": [
